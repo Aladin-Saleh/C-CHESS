@@ -29,7 +29,7 @@ void initialisation_plateau_noir_blanc(int array[][8]){
         
     }
     
-    afficher_plateau_blc_wht(array);
+    afficher_plateau(array);
 
 }
 
@@ -46,22 +46,8 @@ void afficher_plateau(int plateau[][8]){
         
     }
     printf("\n");
-
 }
 
 
-void afficher_plateau_blc_wht(int plateau_blc_wht[][8]){
-    for (int ligne = 0; ligne < TAILLE_PLATEAU; ligne++)
-    {
-        printf("%d |",ligne+1);
-        for (int colonne = 0; colonne < TAILLE_PLATEAU; colonne++)
-        {
-            printf(" %d ",plateau_blc_wht[ligne][colonne]);
-        }
-        printf("\n");
-        
-    }
-    printf("\n");
 
-}
 

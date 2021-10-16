@@ -12,6 +12,8 @@ void init_roi(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* 
 void init_reine(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
 int is_case_contain_piece(int value);
 
+
+
 void initialiser_piece(int plateau[][8]){
 
     int rangee_blanc = 1;
@@ -59,7 +61,7 @@ void initialiser_black_and_white_piece(int plateau_blc_wht[][8]){
         plateau_blc_wht[7][i] = 2;
     }
     
-    afficher_plateau_blc_wht(plateau_blc_wht);
+    afficher_plateau(plateau_blc_wht);
 }
 
 
@@ -301,40 +303,5 @@ int is_case_contain_piece(int value){
 return 0;
 }
 
-
-
-void deplacement_pion(int plateau[][8]){
-    printf("Deplacement de la piece : pion");   
-}
-
-
-
-void deplacement_tour(int plateau[][8]){
-    printf("Deplacement de la piece : tour");
-}
-
-
-
-void deplacement_cavalier(int plateau[][8]){
-    printf("Deplacement de la piece : cavalier");
-}
-
-
-
-void deplacement_fou(int plateau[][8]){
-    printf("Deplacement de la piece : fou");
-}
-
-
-
-void deplacement_roi(int plateau[][8]){
-    printf("Deplacement de la piece : roi");
-}
-
-
-
-void deplacement_reine(int plateau[][8]){
-    printf("Deplacement de la piece : reine");
-}
 
 

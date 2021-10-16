@@ -46,12 +46,3 @@ void init_roi(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* 
 void init_reine(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
 void initialiser_piece(int plateau[][8]);
 int is_case_contain_piece(int value);
-
-/*
-void deplacement_pion();
-void deplacement_tour();
-void deplacement_cavalier();
-void deplacement_fou();
-void deplacement_roi();
-void deplacement_reine();
-*/

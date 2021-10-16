@@ -1,6 +1,6 @@
-#include "../Headers/screen.h"
 #include "../Headers/piece.h"
 #include "../Headers/plateau.h"
+#include "../Headers/deplacement.h"
 #include <SDL2/SDL.h>   
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,9 +25,9 @@ void check(int click_x,int click_y,int plateau[][8],int* colonne,int* ligne);
 int read_plateau(int ligne,int colonne,int plateau[][8]);
 void select_pion(int click_x,int click_y,SDL_Rect* r,int cases_value,int* is_piece_selected);
 void show_choice_available(int ligne,int colonne,int piece,Choice* c,int color,int plateau[][8]);
+int get_piece_indice(int value,int colonne, int ligne);
 
 void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[][TAILLE_PLATEAU]){
-int get_piece_indice(int value,int colonne, int ligne);
 
 
 
@@ -180,7 +180,7 @@ int get_piece_indice(int value,int colonne, int ligne);
     int colonne = 0;
     int last_piece = 0;
     int indice_piece = 0;
-    int is_piece_noir = 0;
+    int is_piece_noir = 1;
 
     int l_buf = 0;
     int c_buf = 0;
@@ -210,10 +210,11 @@ int get_piece_indice(int value,int colonne, int ligne);
                     check(sEvents.motion.x,sEvents.motion.y,plateau,&colonne,&ligne);
                     show_choice_available(ligne,colonne,read_plateau(ligne,colonne,plateau),choice_piece,plateau_blc_and_wht[ligne][colonne],plateau);
 
-                    if (isPieceSelected == 1)
+/*Noir et blanc sont inversé, à fixer si j'ai le temps*/
+                    if (isPieceSelected == 1 && sEvents.button.clicks == 2)
                     {
                         printf("Piece selected ! \n");
-                        isPieceSelected == 0;
+                        isPieceSelected = 0;
 
                             switch (last_piece)
                             {
@@ -226,67 +227,151 @@ int get_piece_indice(int value,int colonne, int ligne);
                                 pions_blanc[indice_piece].rect.y = (ligne*100)+10; 
                                 pions_blanc[indice_piece].rect.x = (colonne*100)+10;
                                 is_piece_noir = 1; 
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 1;                                    
                                 plateau[l_buf][c_buf] = 0;
                                 plateau[ligne][colonne] = 1;
-
                             }
                             else if(is_piece_noir == 1){
                                 pions_noir[indice_piece].rect.y = (ligne*100)+10;
                                 pions_noir[indice_piece].rect.x = (colonne*100)+10;
                                 is_piece_noir = 0;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 2;                                    
                                 plateau[l_buf][c_buf] = 0;
                                 plateau[ligne][colonne] = 1; 
                             }
                             afficher_plateau(plateau);
-                            
-
-                            
-                            
-
-
+                            afficher_plateau(plateau_blc_and_wht);
                                 break;
                             case 2:
-                            tour_blanc[indice_piece].rect.y = (ligne*100)+10; 
-                            tour_blanc[indice_piece].rect.x = (colonne*100)+10;
-                            //tour_noir[indice_piece].rect.y = (ligne*100)+10;
-                            //tour_noir[indice_piece].rect.x = (colonne*100)+10;
+                            if (is_piece_noir == 0)
+                            {
+                                tour_blanc[indice_piece].rect.y = (ligne*100)+10; 
+                                tour_blanc[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 1;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 1;                                    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = TOUR;   
 
+                            }else if(is_piece_noir == 1){
+                                tour_noir[indice_piece].rect.y = (ligne*100)+10; 
+                                tour_noir[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 0;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 2;                                    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = TOUR; 
+                            }
+                            afficher_plateau(plateau);
+                            afficher_plateau(plateau_blc_and_wht);
                                 break;
                             case 3:
-                            cavalier_blanc[indice_piece].rect.y = (ligne*100)+10; 
-                            cavalier_blanc[indice_piece].rect.x = (colonne*100)+10;
-                            //cavalier_noir[indice_piece].rect.y = (ligne*100)+10;
-                            //cavalier_noir[indice_piece].rect.x = (colonne*100)+10;
+                            if (is_piece_noir == 0)
+                            {
+                                cavalier_blanc[indice_piece].rect.y = (ligne*100)+10; 
+                                cavalier_blanc[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 1;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 1;                                    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = CAVALIER; 
 
+                            }else if(is_piece_noir == 1){
+                                cavalier_noir[indice_piece].rect.y = (ligne*100)+10;
+                                cavalier_noir[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 0;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 2;                                    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = CAVALIER; 
+                            }
+                            afficher_plateau(plateau);
+                            afficher_plateau(plateau_blc_and_wht);
                                 break;
                             case 4:
-                            fou_blanc[indice_piece].rect.y = (ligne*100)+10; 
-                            fou_blanc[indice_piece].rect.x = (colonne*100)+10;
-                            //fou_noir[indice_piece].rect.y = (ligne*100)+10;
-                            //fou_noir[indice_piece].rect.x = (colonne*100)+10;
+                            if (is_piece_noir == 0)
+                            {
+                                fou_blanc[indice_piece].rect.y = (ligne*100)+10; 
+                                fou_blanc[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 1;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 1;                                    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = FOU; 
 
+                            }else if(is_piece_noir == 1){
+                                fou_noir[indice_piece].rect.y = (ligne*100)+10;
+                                fou_noir[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 0;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 2;                                    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = FOU; 
+                            }
+                            afficher_plateau(plateau);
+                            afficher_plateau(plateau_blc_and_wht);
                                 break;
                             case 5:
-                            reine_blanc[indice_piece].rect.y = (ligne*100)+10; 
-                            reine_blanc[indice_piece].rect.x = (colonne*100)+10;
-                            //reine_noir[indice_piece].rect.y = (ligne*100)+10;
-                            //reine_noir[indice_piece].rect.x = (colonne*100)+10;
+                            if (is_piece_noir == 0)
+                            {   
+                                reine_blanc[indice_piece].rect.y = (ligne*100)+10; 
+                                reine_blanc[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 1;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 1;    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = REINE; 
 
+                            }else if(is_piece_noir == 1){
+                                reine_noir[indice_piece].rect.y = (ligne*100)+10;
+                                reine_noir[indice_piece].rect.x = (colonne*100)+10;                       
+                                is_piece_noir = 0;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 2;    
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = REINE; 
+                            }
+                            afficher_plateau(plateau);
+                            afficher_plateau(plateau_blc_and_wht);
                                 break;
                             case 6:
-                            roi_blanc[indice_piece].rect.y = (ligne*100)+10; 
-                            roi_blanc[indice_piece].rect.x = (colonne*100)+10;
-                            //roi_noir[indice_piece].rect.y = (ligne*100)+10;
-                            //roi_noir[indice_piece].rect.x = (colonne*100)+10;
+                            if (is_piece_noir == 0)
+                            {
+                                roi_blanc[indice_piece].rect.y = (ligne*100)+10; 
+                                roi_blanc[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 1;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 1;                                
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = ROI; 
 
+                            }else if(is_piece_noir == 1){
+                                
+                                roi_noir[indice_piece].rect.y = (ligne*100)+10;
+                                roi_noir[indice_piece].rect.x = (colonne*100)+10;
+                                is_piece_noir = 0;
+                                plateau_blc_and_wht[l_buf][c_buf] = 0;
+                                plateau_blc_and_wht[ligne][colonne] = 2;                                
+                                plateau[l_buf][c_buf] = 0;
+                                plateau[ligne][colonne] = ROI; 
+
+                            }
+                            afficher_plateau(plateau);
+                            afficher_plateau(plateau_blc_and_wht);
                                 break;                
                             }                       
                         
                     }
-                    last_piece = read_plateau(ligne,colonne,plateau);
-                    indice_piece = get_piece_indice(read_plateau(ligne,colonne,plateau),colonne,ligne);
-                    l_buf = ligne;
-                    c_buf = colonne;
+                    if (read_plateau(ligne,colonne,plateau) != 0)
+                    {
+                        last_piece = read_plateau(ligne,colonne,plateau);
+                        indice_piece = get_piece_indice(read_plateau(ligne,colonne,plateau),colonne,ligne);
+                        l_buf = ligne;
+                        c_buf = colonne;
+                    }
+                    
                     printf("last_piece : %d\n",last_piece);
                     printf("indice_piece : %d\n",indice_piece);
                     select_pion(sEvents.motion.x,sEvents.motion.y,&selected,read_plateau(ligne,colonne,plateau),&isPieceSelected);
@@ -298,6 +383,7 @@ int get_piece_indice(int value,int colonne, int ligne);
         }
 
 
+        //printf("%s\n",get_from_map(&map_piece,read_plateau(ligne,colonne,plateau)));
 
         SDL_SetRenderDrawColor(pRenderer, 55, 0, 100, 255);//Rendu,Red,Green,Blue,Alpha(transparence);
         SDL_RenderClear(pRenderer);//On nettoie le contenue de la fenetre
@@ -442,7 +528,6 @@ int read_plateau(int ligne,int colonne, int plateau[][8]){
 void select_pion(int click_x,int click_y,SDL_Rect* r,int cases_value,int* is_piece_selected){
     int coord_x = (click_x/100) *100 ; 
     int coord_y = (click_y/100) *100 ;
-    *is_piece_selected = 0;
     if (cases_value != 0)
     {
         *is_piece_selected = 1;
@@ -457,7 +542,9 @@ void select_pion(int click_x,int click_y,SDL_Rect* r,int cases_value,int* is_pie
 
 void show_choice_available(int ligne,int colonne,int piece,Choice* c,int color,int plateau[][8]){
     int add_y = 100;
-    int add_x = 100;
+    int ind =0;
+
+    //int add_x = 100;
 
 
     printf("LIGNE : %d\n",ligne);
@@ -476,158 +563,44 @@ void show_choice_available(int ligne,int colonne,int piece,Choice* c,int color,i
         break;
     case 1://pion
         printf("%d :: \n",piece);
-        
-        printf("X : %d \n",ligne*100);
-        printf("Y : %d \n",colonne*100);
-        printf("COLOR : %d\n",color);
-
         if (color == 1)
         {
-            if (ligne == 1)
-            {
-                add_y = 200;
-            }
-            
-            c[0].choice_info.h = add_y;
-            c[0].choice_info.w = 100;
-            c[0].choice_info.x = (colonne * 100) ;
-            c[0].choice_info.y = (ligne * 100) + 100 ;
+            deplacement_pion(plateau,c,ligne,colonne,1);
         }
         else if (color == 2)
         {
-            if (ligne == 6)
-            {
-                add_y = 200;
-            }
-
-            c[0].choice_info.h = add_y;
-            c[0].choice_info.w = 100;
-            c[0].choice_info.x =(colonne * 100) ;
-            c[0].choice_info.y =((ligne) * 100) - 200 ;
+            deplacement_pion(plateau,c,ligne,colonne,-1);
         }
         break;
     case 2://tour
-        
+        deplacement_tour(plateau,c,ligne,colonne);     
         break;
     case 3://cavalier
-
-        if (color == 1)
-        {            
-            c[0].choice_info.h = 100;
-            c[0].choice_info.w = 100;
-            c[0].choice_info.x = (colonne * 100) + 100;
-            c[0].choice_info.y = (ligne * 100) + 200 ;
-
-            c[1].choice_info.h = 100;
-            c[1].choice_info.w = 100;
-            c[1].choice_info.x = (colonne * 100) - 100;
-            c[1].choice_info.y = (ligne * 100) + 200 ;   
-
-            c[2].choice_info.h = 100;
-            c[2].choice_info.w = 100;
-            c[2].choice_info.x = (colonne * 100) + 200;
-            c[2].choice_info.y = (ligne * 100) + 100 ;
-
-            c[3].choice_info.h = 100;
-            c[3].choice_info.w = 100;
-            c[3].choice_info.x = (colonne * 100) - 200;
-            c[3].choice_info.y = (ligne * 100) + 100 ;  
-
-            c[4].choice_info.h = 100;
-            c[4].choice_info.w = 100;
-            c[4].choice_info.x = (colonne * 100) + 100;
-            c[4].choice_info.y = (ligne * 100) - 200 ;
-
-            c[5].choice_info.h = 100;
-            c[5].choice_info.w = 100;
-            c[5].choice_info.x = (colonne * 100) - 100;
-            c[5].choice_info.y = (ligne * 100) - 200 ; 
-
-            c[6].choice_info.h = 100;
-            c[6].choice_info.w = 100;
-            c[6].choice_info.x = (colonne * 100) + 200;
-            c[6].choice_info.y = (ligne * 100) - 100 ;
-
-            c[7].choice_info.h = 100;
-            c[7].choice_info.w = 100;
-            c[7].choice_info.x = (colonne * 100) - 200;
-            c[7].choice_info.y = (ligne * 100) - 100 ;        
-        }
-        else{
-            c[0].choice_info.h = 100;
-            c[0].choice_info.w = 100;
-            c[0].choice_info.x = (colonne * 100) + 100;
-            c[0].choice_info.y = (ligne * 100) - 200 ;
-
-            c[1].choice_info.h = 100;
-            c[1].choice_info.w = 100;
-            c[1].choice_info.x = (colonne * 100) - 100;
-            c[1].choice_info.y = (ligne * 100) - 200 ;   
-
-            c[2].choice_info.h = 100;
-            c[2].choice_info.w = 100;
-            c[2].choice_info.x = (colonne * 100) + 200;
-            c[2].choice_info.y = (ligne * 100) - 100 ;
-
-            c[3].choice_info.h = 100;
-            c[3].choice_info.w = 100;
-            c[3].choice_info.x = (colonne * 100) - 200;
-            c[3].choice_info.y = (ligne * 100) - 100 ;  
-
-            c[4].choice_info.h = 100;
-            c[4].choice_info.w = 100;
-            c[4].choice_info.x = (colonne * 100) + 100;
-            c[4].choice_info.y = (ligne * 100) + 200 ;
-
-            c[5].choice_info.h = 100;
-            c[5].choice_info.w = 100;
-            c[5].choice_info.x = (colonne * 100) - 100;
-            c[5].choice_info.y = (ligne * 100) + 200 ; 
-
-            c[6].choice_info.h = 100;
-            c[6].choice_info.w = 100;
-            c[6].choice_info.x = (colonne * 100) + 200;
-            c[6].choice_info.y = (ligne * 100) + 100 ;
-
-            c[7].choice_info.h = 100;
-            c[7].choice_info.w = 100;
-            c[7].choice_info.x = (colonne * 100) - 200;
-            c[7].choice_info.y = (ligne * 100) + 100 ;  
-
-        }
-        
-
-
-        
-          
+        deplacement_cavalier(plateau,c,ligne,colonne);       
         break;
     case 4://fou
         printf("%d ::\n",piece);
-
-
+        deplacement_fou(plateau,c,ligne,colonne);
         break;
     case 6://roi
         printf("%d ::\n",piece);
-       
+        deplacement_roi(plateau,c,ligne,colonne);
         break;
     case 5://reine
         printf("%d ::\n",piece);
-        
+        deplacement_reine(plateau,c,ligne,colonne);
         break;
     }
 
 
 }
 
-
-
-
 int get_piece_indice(int value,int colonne, int ligne){
 
     switch (value)
     {
     case 0:
-        /* code */
+        return 0;
         break;
     case 1:
     for (int ind_p = 0; ind_p < 8; ind_p++)
@@ -720,15 +693,6 @@ int get_piece_indice(int value,int colonne, int ligne){
     }
         break;                
     }
-}
-
-
-
-int get_piece_indice_auto(Piece* array,int ligne,int colonne,int ind_p){
-        if ((array[ind_p].rect.x == (colonne*100)+10) && (array[ind_p].rect.y == (ligne*100)+10))
-        {
-            return ind_p;
-        }
 }
 
 
