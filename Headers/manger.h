@@ -1,0 +1,2 @@
+void manger_piece(int value_piece_to_eat,int indice_piece,int piece_color_value);
+int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value,int last_piece_color,int new_piece_color,int l,int c,int nl,int nc);

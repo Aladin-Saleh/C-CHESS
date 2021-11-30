@@ -19,7 +19,7 @@ void deplacement_reine(int plateau[][8],Choice* c,int ligne,int colonne);
  * @param color 1 ou -1
  */
 void deplacement_pion(int plateau[][8],Choice* c,int ligne,int colonne,int color){
-    printf("Deplacement de la piece : pion");
+    printf("Deplacement de la piece : pion\n");
             if (ligne == 6)
             {
                 c[0].choice_info.h = 200;
@@ -34,7 +34,7 @@ void deplacement_pion(int plateau[][8],Choice* c,int ligne,int colonne,int color
 
 
 void deplacement_tour(int plateau[][8],Choice* c,int ligne,int colonne){
-    printf("Deplacement de la piece : tour");
+    printf("Deplacement de la piece : tour\n");
             c[0].choice_info.h = 100;
             c[0].choice_info.w = 800;
             c[0].choice_info.x = (colonne * 100);
@@ -59,7 +59,7 @@ void deplacement_tour(int plateau[][8],Choice* c,int ligne,int colonne){
 
 
 void deplacement_cavalier(int plateau[][8],Choice* c,int ligne,int colonne){
-    printf("Deplacement de la piece : cavalier");
+    printf("Deplacement de la piece : cavalier\n");
             c[0].choice_info.h = 100;
             c[0].choice_info.w = 100;
             c[0].choice_info.x = (colonne * 100) + 100;
@@ -104,7 +104,7 @@ void deplacement_cavalier(int plateau[][8],Choice* c,int ligne,int colonne){
 
 
 void deplacement_fou(int plateau[][8],Choice* c,int ligne,int colonne){
-    printf("Deplacement de la piece : fou");
+    printf("Deplacement de la piece : fou\n");
         int ind = 0;
         for (int i = 0; i < 8; i++)
         {
@@ -144,7 +144,7 @@ void deplacement_fou(int plateau[][8],Choice* c,int ligne,int colonne){
 
 
 void deplacement_roi(int plateau[][8],Choice* c,int ligne,int colonne){
-    printf("Deplacement de la piece : roi");
+    printf("Deplacement de la piece : roi\n");
            
         c[0].choice_info.h = 100;
         c[0].choice_info.w = 200;
@@ -171,7 +171,7 @@ void deplacement_roi(int plateau[][8],Choice* c,int ligne,int colonne){
 
 
 void deplacement_reine(int plateau[][8],Choice* c,int ligne,int colonne){
-    printf("Deplacement de la piece : reine");
+    printf("Deplacement de la piece : reine\n");
     deplacement_fou(plateau,c,ligne,colonne);
             c[33].choice_info.h = 100;
             c[33].choice_info.w = 800;

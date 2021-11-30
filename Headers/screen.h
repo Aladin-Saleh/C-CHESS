@@ -14,3 +14,4 @@ struct Choice
 
 
 void initialiser_fenetre(int plateau[][8],int plateau_blc_and_wht[][8]);
+int get_piece_indice(int value,int colonne, int ligne);
