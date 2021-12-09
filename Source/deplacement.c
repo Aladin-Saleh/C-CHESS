@@ -195,3 +195,13 @@ void deplacement_reine(int plateau[][8],Choice* c,int ligne,int colonne){
 }
 
 
+
+int en_passant(){
+    return 1;
+    return -1;
+}
+
+int roque(){
+    return 1;
+    return -1;
+}

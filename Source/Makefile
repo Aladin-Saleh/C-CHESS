@@ -1,7 +1,7 @@
 SDL_CFLAGS=`sdl2-config --cflags --libs`
 
-main : main.o plateau.o piece.o screen.o map.o deplacement.o manger.o mat.o
-	gcc -o main main.o plateau.o piece.o screen.o map.o deplacement.o manger.o mat.o $(SDL_CFLAGS)
+main : main.o plateau.o piece.o screen.o map.o deplacement.o manger.o mat.o promotion.o
+	gcc -o main main.o plateau.o piece.o screen.o map.o deplacement.o manger.o mat.o promotion.o $(SDL_CFLAGS)
 
 main.o : main.c
 	gcc -o main.o -c main.c 
@@ -26,6 +26,9 @@ manger.o : manger.c
 
 mat.o : mat.c
 	gcc -o mat.o -c mat.c
+
+promotion.o : promotion.c
+	gcc -o promotion.o -c promotion.c
 
 clean :
 	rm -f *.o

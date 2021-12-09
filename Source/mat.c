@@ -10,7 +10,7 @@
  * 
  * 
  */
-int get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int color);
+int * get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int color);
 
 
 /**
@@ -22,7 +22,9 @@ int get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int co
  * 2 : Blanc
  * @return int 
  */
-int get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int color){
+
+/*
+int * get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int color){
     int king_position[2];
     for (int i = 0; i < 8; i++)
     {
@@ -38,7 +40,7 @@ int get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int co
     return king_position;
 }
 
-
+*/
 
 int mat(){
 
@@ -46,3 +48,5 @@ int mat(){
     return 1;
     return -1;
 }
+
+

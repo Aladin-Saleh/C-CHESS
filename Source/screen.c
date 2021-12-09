@@ -1,6 +1,7 @@
 #include "../Headers/piece.h"
 #include "../Headers/plateau.h"
 #include "../Headers/deplacement.h"
+#include "../Headers/promotion.h"
 #include <SDL2/SDL.h>   
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +22,8 @@ struct Cases
     int y1,y2;
 };
 
+
+
 void initialier_plateau(int xBuf[][8],int yBuf[][8],int bool);
 void check(int click_x,int click_y,int plateau[][8],int* colonne,int* ligne);
 int read_plateau(int ligne,int colonne,int plateau[][8]);
@@ -29,6 +32,7 @@ void show_choice_available(int ligne,int colonne,int piece,Choice* c,int color,i
 int get_piece_indice(int value,int colonne, int ligne);
 int move_piece(int value,int colonne, int ligne,int piece_selected,int color,int prev_l,int prev_c,int plateau_blc_and_wht[][8],int plateau[][8]);
 void eat(int color_array[][8],int piece_array[][8],int ligne,int colonne);
+int get_indice_pion(int xCoord,int yCoord);
 
 void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[][TAILLE_PLATEAU]){
 
@@ -45,9 +49,10 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
     //2 blanc
     //1 noir
     int who_play = 2;
+    int l_buf = 0;//Position à n-1
+    int c_buf = 0;//Position à n-1
 
-    int l_buf = 0;
-    int c_buf = 0;
+
 
     struct Cases c;
     Choice choice_piece[50];
@@ -193,11 +198,13 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
         choice_piece[ind_slctd_set].choice_info.w = 0;
     }
 
+    int *p;
     while (isOpen)//Cette boucle vas maintenir le programme en "vie".
     {
 
         while (SDL_PollEvent(&sEvents))
         { 
+            printf("%d\n",check_white_pions());
              switch (sEvents.type)
             {
                  case SDL_QUIT://Event lorsque l'on clique pour fermer le programme.
@@ -206,38 +213,56 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     break;
                  case SDL_MOUSEBUTTONDOWN: // Click de souris (Gestionnaire souris)
                    
-        
 
+                   
+                   /*
+                        Test changment de piece (promotion)
+                    pions_blanc[2].surface_piece = SDL_LoadBMP("../Img/Tour.bmp");
+                    pions_blanc[2].texture_piece = SDL_CreateTextureFromSurface(pRenderer,pions_blanc[2].surface_piece);
+                    SDL_FreeSurface(pions_blanc[2].surface_piece);
+                    */
 
+                    //*p = get_king_position(plateau,plateau_blc_and_wht,2);
+                    //printf("ligne : %d\ncolonne : %d\n",*(p+0),*(p+1));
                     check(sEvents.motion.x,sEvents.motion.y,plateau,&colonne,&ligne);
-                    printf("Clique sur X : %d Y: %d\n",colonne,ligne);
-                    printf("%s\n",get_from_map(&noir_blanc,read_plateau(ligne,colonne,plateau_blc_and_wht)));
-                    printf("%s\n",get_from_map(&map_piece,read_plateau(ligne,colonne,plateau)));
+                    //printf("Clique sur X : %d Y: %d\n",colonne,ligne);
+                    //printf("%s\n",get_from_map(&noir_blanc,read_plateau(ligne,colonne,plateau_blc_and_wht)));
+                    //printf("%s\n",get_from_map(&map_piece,read_plateau(ligne,colonne,plateau)));
                     show_choice_available(ligne,colonne,read_plateau(ligne,colonne,plateau),choice_piece,plateau_blc_and_wht[ligne][colonne],plateau);
                     select_pion(sEvents.motion.x,sEvents.motion.y,&selected,read_plateau(ligne,colonne,plateau),&isPieceSelected);//yellow case
 
                     if ((read_plateau(ligne,colonne,plateau) != 0) && (read_plateau(ligne,colonne,plateau_blc_and_wht) == piece_color))
                     {
-                        piece_selected = get_piece_indice(read_plateau(ligne,colonne,plateau),colonne,ligne);
+                        for (int i_p = 0; i_p < 8; i_p++)
+                        {
+                            printf("%d\nXCORD : %d\nYCORD : %d\n---------------\n",i_p,pions_noir[i_p].rect.x,pions_noir[i_p].rect.y);
+                        }
+                        
+                        
+                        //printf("Indice de piece : %d\n",get_piece_indice(read_plateau(ligne,colonne,plateau),colonne,ligne));
+                        printf("Clique sur X : %d Y: %d\n",(colonne*100)+10,(ligne*100)+10);
+                        printf("INDICE DE LA PIECE : %d\n",get_indice_pion((colonne*100)+10,(ligne*100)+10));
                         indice_piece = read_plateau(ligne,colonne,plateau);
                         l_buf = ligne;
                         c_buf = colonne;
-                        printf("Piece selected = %d\n",piece_selected);
+                        
+                        piece_selected = get_piece_indice(read_plateau(ligne,colonne,plateau),colonne,ligne);
+                        //printf("Piece selected = %d\n",piece_selected);
                     }
                     
                     //printf("Case contain a %s",get_from_map(&map_piece,read_plateau(ligne,colonne,plateau)));
                     /*Noir et blanc sont inversé, à fixer si j'ai le temps*/
                     if (piece_color == 2 && sEvents.button.clicks == 2 && piece_selected != -1 && is_movable(plateau_blc_and_wht,plateau[l_buf][c_buf],plateau[ligne][colonne],plateau_blc_and_wht[l_buf][c_buf],plateau_blc_and_wht[ligne][colonne],l_buf,c_buf,ligne,colonne) != -1)//On bouge les blancs
                     {
-                        printf("Au tour des blancs \n");           
-                        printf("Indice piece : %d\n",piece_selected);      
+                        //printf("Au tour des blancs \n");           
+                        //printf("Indice piece : %d\n",piece_selected);      
                         move_piece(indice_piece,colonne,ligne,piece_selected,piece_color,l_buf,c_buf,plateau_blc_and_wht,plateau); 
                         piece_color = 1;
                         piece_selected = -1;
                         indice_piece = 0;
                     }
                     else if(piece_color == 1 && sEvents.button.clicks == 2 && piece_selected != -1 && is_movable(plateau_blc_and_wht,plateau[l_buf][c_buf],plateau[ligne][colonne],plateau_blc_and_wht[l_buf][c_buf],plateau_blc_and_wht[ligne][colonne],l_buf,c_buf,ligne,colonne) != -1){//On bouge les noirs
-                        printf("Au tour des noirs \n");   
+                        //printf("Au tour des noirs \n");   
                         move_piece(indice_piece,colonne,ligne,piece_selected,piece_color,l_buf,c_buf,plateau_blc_and_wht,plateau); 
                         piece_color = 2;
                         indice_piece = 0;
@@ -245,7 +270,7 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     }
                     afficher_plateau(plateau);
                     afficher_plateau(plateau_blc_and_wht);
-                    printf("Indice piece apres deplacement : %d \n",indice_piece);
+                    //printf("Indice piece apres deplacement : %d \n",indice_piece);
                     break;
             }  
         }
@@ -452,15 +477,8 @@ int get_piece_indice(int value,int colonne, int ligne){
     case 1:
     for (int ind_p = 0; ind_p < 8; ind_p++)
     {
-        if ((pions_blanc[ind_p].rect.x == (colonne*100)+10) && (pions_blanc[ind_p].rect.y == (ligne*100)+10))
-        {
-            return ind_p;
-        }
 
-        if ((pions_noir[ind_p].rect.x == (colonne*100)+10) && (pions_noir[ind_p].rect.y == (ligne*100)+10))
-        {
-            return ind_p;
-        }
+        return get_indice_pion((colonne*100)+10,(ligne*100)+10);
     }
         break;
     case 2:
@@ -719,4 +737,34 @@ void eat(int color_array[][8],int piece_array[][8],int ligne,int colonne){
     else{
        printf("Rien à manger :( \n");
     }
+}
+
+/**
+ * @brief Get the indice pion   
+ * Fonction à part pour les pions qui sont gérer differement lorsque que plusieurs pions sont sur la meme ligne/colonne
+ * @param xCoord 
+ * @param yCoord 
+ * @return int indice du pions
+ */
+int get_indice_pion(int xCoord,int yCoord){
+    printf("xCoord : %d\n yCoord : %d\n",xCoord,yCoord);
+    int last_ind_found = -1;
+    for (int i = 0; i < 8; i++)
+    {
+        if (pions_blanc[i].rect.x == xCoord && pions_blanc[i].rect.y == yCoord)
+        {
+            printf("Find ind in %d\n",i);
+            last_ind_found = i;
+            //return i;
+        }
+
+        if (pions_noir[i].rect.x == xCoord && pions_noir[i].rect.y == yCoord)
+        {
+            printf("Find ind in %d\n",i);
+            last_ind_found = i;
+            //return i;
+        }
+        
+    }
+    return last_ind_found;
 }

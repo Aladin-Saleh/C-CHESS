@@ -106,59 +106,105 @@ int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value
     int dgn_droite_l = 0;
     int dgn_droite_c = 0;
     int count = 0;
+
+    int last_coup_blanc = 0;
+    int last_coup_noir = 0;
+
     //avancer : ligne : 1 colonne : +1
     
     if (last_piece_color == new_piece_color)
     {
         return -1;
     }
+
+
+    
     switch (last_piece_value)
     {
     case PION:
         if (plateau_blc_wht[nl][nc] != 0)
         {
-            return -1;
-        }
-        else{
-            if ((l-1 == nl && c == nc && last_piece_color == 2) || (l+1 == nl && c == nc && last_piece_color == 1))
-            {
-                printf("1\n");
-                return 1;
-            }
-            if ((l-2 == nl && c == nc && last_piece_color == 2 && l == 6) || (l+2 == nl && c == nc && last_piece_color == 1 && l == 1 ))
-            {
-                printf("2\n");
-                return 1;
-            }
-
-            if ((l-2 == nl && last_piece_color == 2 && l == 6) || (l+2 == nl && c == nc && last_piece_color == 1 && l == 1 ))
-            {
-                printf("4\n");
-                return 1;
-            }
-        }
-        
         //diagonale droite
         if (c+1 == nc && l-1 == nl && plateau_blc_wht[nl][nc] == 1)
         {
+            printf("EAT !!!!!!!!!!!!!!!!!!!\n");
             return 1;
         }
         //diagonale gauche
         if (c-1 == nc && l-1 == nl && plateau_blc_wht[nl][nc] == 1)
         {
+            printf("EAT !!!!!!!!!!!!!!!!!!!\n");
             return 1;
         }     
 
         //diagonale gauche bas            
         if (c-1 == nc && l+1 == nl && plateau_blc_wht[nl][nc] == 2)
         {
+            printf("EAT !!!!!!!!!!!!!!!!!!!\n");
             return 1;
         }
         //diagonale droite bas
+
         if (c+1 == nc && l+1 == nl && plateau_blc_wht[nl][nc] == 2)
         {
+            printf("EAT !!!!!!!!!!!!!!!!!!!\n");
+            return 1;
+        }
+            return -1;
+        }
+        else{
+            if ((l-1 == nl && c == nc && last_piece_color == 2) || (l+1 == nl && c == nc && last_piece_color == 1))
+            {
+                last_coup_noir = 1;
+                last_coup_blanc = 1;
+                printf("1\n");
+                return 1;
+            }
+            if ((l-2 == nl && c == nc && last_piece_color == 2 && l == 6) || (l+2 == nl && c == nc && last_piece_color == 1 && l == 1 ))
+            {
+                //blanc
+                last_coup_blanc = 2;
+                printf("2\n");
+                return 1;
+            }
+
+            if ((l-2 == nl && last_piece_color == 2 && l == 6) || (l+2 == nl && c == nc && last_piece_color == 1 && l == 1 ))
+            {
+                last_coup_noir = 2;
+                printf("4\n");
+                return 1;
+            }
+        }
+        
+        //diagonale droite en passant
+        if (c+1 == nc && l-1 == nl && plateau_blc_wht[nl][nc] == 0 && plateau_blc_wht[nl+1][nc] == 1 && l == 3)
+        {
+            
+            manger_piece(1,nc,1);//La regle en passant ne s'applique qu'au pion
+            return 1;
+        }
+
+        //diagonale gauche en passant 
+        if (c-1 == nc && l-1 == nl && plateau_blc_wht[nl][nc] == 0 && plateau_blc_wht[nl+1][nc] == 1 && l == 3)
+        {
+            manger_piece(1,nc,1);
+            return 1;
+        }
+        //diagonale gauche bas en passant     
+        if (c-1 == nc && l+1 == nl && plateau_blc_wht[nl][nc] == 0 && plateau_blc_wht[nl-1][nc] == 2 && l == 4)
+        {
+            manger_piece(1,nc,2);
+            return 1;
+        }
+        //diagonale droite bas en passant
+        if (c+1 == nc && l+1 == nl && plateau_blc_wht[nl][nc] == 0 && plateau_blc_wht[nl-1][nc] == 2 && l == 4)
+        {
+            manger_piece(1,nc,2);
             return 1;
         }   
+
+
+   
         
             return -1;
         break;
@@ -379,7 +425,6 @@ int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value
 
         break; 
     case ROI:
-        
         //diagonale droite
         if (c+1 == nc && l-1 == nl)
         {
@@ -401,26 +446,12 @@ int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value
         {
             return 1;
         }   
-        
-        if (c == nc || l-1 == nl)
+        //avant
+        if ((l-1 == nl && c == nc) ||(l+1 == nl && c == nc))
         {
             return 1;
         }
         
-        if (c == nc || l+1 == nl)
-        {
-            return 1;
-        }
-
-        if (c-1 == nc || l == nl)
-        {
-            return 1;
-        }
-
-        if (c+1 == nc || l == nl)
-        {
-            return 1;
-        }
 
         return -1;
         break;                       
