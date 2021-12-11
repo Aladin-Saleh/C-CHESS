@@ -1,52 +1,45 @@
-/**
- * 
- * @file mat.c
- * @author Saleh Aladin (aladin8857@gmail.com)
- * @brief 
- * @version 0.1
- * @date 2021-11-30
- * 
- * @copyright Copyright (c) 2021
- * 
- * 
- */
-int * get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int color);
+#include "../Headers/piece.h"
 
 
-/**
- * @brief Get the king position in the array
- * Get the postion of the king (color given) position.
- * @param plateau_piece playground
- * @param color color of the piece
- * 1 : Noir
- * 2 : Blanc
- * @return int 
- */
+int is_king_echec(int plateau[][8],int plateau_color[][8]){
+    //1er etape verifier que le roi et entouré et qu'il n'y pas de cavalier autour de lui
+    //Si roi pas entouré de piece à lui, verifier les diagonale,les horizontale,les verticales
 
-/*
-int * get_king_position(int plateau_piece[][8],int plateau_piece_color[][8],int color){
-    int king_position[2];
-    for (int i = 0; i < 8; i++)
+
+
+
+    //Récuperation de la position des deux rois
+    //Roi noir
+    int xNoir = roi_blanc[0].rect.y/100;
+    int yNoir = roi_blanc[0].rect.x/100;
+    //printf("X : %d\nY : %d\n---\n",xNoir,yNoir);
+    //Roi blanc
+    int xBlanc = roi_noir[0].rect.y/100;
+    int yBlanc = roi_noir[0].rect.x/100;
+    //printf("X : %d\nY : %d\n---\n",xBlanc,yBlanc);
+
+
+    //check roi blanc 2
+    if ((plateau_color[xBlanc-1][yBlanc] ||
+        plateau_color[xBlanc-1][yBlanc-1] ||
+        plateau_color[xBlanc-1][yBlanc+1] ||
+        plateau_color[xBlanc][yBlanc+1] ||
+        plateau_color[xBlanc][yBlanc-1]) != 2)
     {
-        for (int j = 0; j < 8; j++)
-        {
-            if (plateau_piece[i][j] == 6 && plateau_piece_color[i][j] == color)
-            {
-                king_position[0] = i;
-                king_position[1] = j;
-            }
-        }
+        //On verifie jouant tout les coups possible autour du roi
+        printf("Checking 2 :!\n ");
     }
-    return king_position;
+    
+    //printf("[xBlanc-1][yBlanc] : %d\n",plateau_color[xBlanc-1][yBlanc]);
+    //printf("[xBlanc-1][yBlanc-1] : %d\n",plateau_color[xBlanc-1][yBlanc-1]);
+    //printf("[xBlanc-1][yBlanc+1] : %d\n",plateau_color[xBlanc-1][yBlanc+1]);
+    //printf("[xBlanc][yBlanc+1] : %d\n",plateau_color[xBlanc][yBlanc+1]);
+    //printf("[xBlanc][yBlanc-1] : %d\n",plateau_color[xBlanc][yBlanc-1]);
+
+
+
 }
 
-*/
 
-int mat(){
-
-
-    return 1;
-    return -1;
-}
 
 

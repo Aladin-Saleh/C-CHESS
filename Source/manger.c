@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include "../Headers/map.h"
 #include "../Headers/piece.h"
+#include "../Headers/roque.h"
 #include "../Headers/screen.h"
 #include <SDL2/SDL.h>
 
-int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value,int last_piece_color,int new_piece_color,int l,int c,int nl,int nc);
+int is_movable(int plateau[][8],int plateau_blc_wht[][8],int last_piece_value,int new_piece_value,int last_piece_color,int new_piece_color,int l,int c,int nl,int nc);
 
 void manger_piece(int value_piece_to_eat,int indice_piece,int is_black){
     switch (value_piece_to_eat)
@@ -97,7 +98,7 @@ int can_we_eat_king(){
 
 }
 
-int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value,int last_piece_color,int new_piece_color,int l,int c,int nl,int nc){
+int is_movable(int plateau[][8],int plateau_blc_wht[][8],int last_piece_value,int new_piece_value,int last_piece_color,int new_piece_color,int l,int c,int nl,int nc){
     //PION :
     //diagonale gauche : ligne : -1 colonne : -1
     int dgn_gauche_l = 0;
@@ -107,9 +108,20 @@ int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value
     int dgn_droite_c = 0;
     int count = 0;
 
+    //Cette variable permet de savoir si le coup en passant est activable ou non
     int last_coup_blanc = 0;
     int last_coup_noir = 0;
 
+
+    //Roi noir
+    int xNoir = roi_blanc[0].rect.y/100;
+    int yNoir = roi_blanc[0].rect.x/100;
+
+    //Roi blanc
+    int xBlanc = roi_noir[0].rect.y/100;
+    int yBlanc = roi_noir[0].rect.x/100;
+
+    int id_tour;
     //avancer : ligne : 1 colonne : +1
     
     if (last_piece_color == new_piece_color)
@@ -451,6 +463,17 @@ int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value
         {
             return 1;
         }
+
+        if (_roque_blanc(plateau,plateau_blc_wht) == 1)
+        {
+            return 1;
+        }
+
+        if (_roque_noir(plateau,plateau_blc_wht) == 1)
+        {
+            return 1;
+        }
+        
         
 
         return -1;
@@ -458,18 +481,25 @@ int is_movable(int plateau_blc_wht[][8],int last_piece_value,int new_piece_value
     }
 }
 
-int piece_around(){
 
-}
-//check fou 
-//check tour 
-//check reine
-
-int check_fou(int plt[][8],int current_pos,int dest_pos){
-
-    
-}
-
-int check_tour(){
-
-}
+/*        if (plateau_blc_wht[xBlanc][yBlanc+1] == 0 && plateau_blc_wht[xBlanc][yBlanc+2] == 0)
+        {
+            printf("[xBlanc][yBlanc+1] : %d\n",plateau_blc_wht[xBlanc][yBlanc+1]);
+            printf("[xBlanc][yBlanc-1] : %d\n",plateau_blc_wht[xBlanc][yBlanc+1]);
+            if (plateau_blc_wht[xBlanc][yBlanc+3] == 2 && plateau[xBlanc][yBlanc+3] == 2)
+            {
+                printf("[xBlanc][yBlanc+1] : %d\n",plateau_blc_wht[xBlanc][yBlanc+3]);
+                id_tour = get_piece_indice(2,xBlanc,yBlanc+3);//Recupere l'id de la tour avec qui on fait le roque
+                printf("ID TOUR : %d\n",id_tour);
+                tour_noir[id_tour].rect.x = ((yBlanc+1)*100)+10;
+                tour_noir[id_tour].rect.y = (xBlanc*100)+10;
+                plateau[xBlanc][yBlanc-2] = 2;
+                plateau_blc_wht[xBlanc][yBlanc-2] = 2;
+                printf("Roque possible blanc\n");
+                return 1;
+            }
+            else{
+                printf("Roque impossible blanc\n");
+            }
+         
+        }*/

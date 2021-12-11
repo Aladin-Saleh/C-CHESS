@@ -5,9 +5,10 @@
 #include <SDL2/SDL.h>   
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Headers/map.h"
 #include "../Headers/manger.h"
 #include "../Headers/mat.h"
+#include "../Headers/roque.h"
+
 
 #define BLANC 255
 #define NOIR 0
@@ -48,7 +49,6 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
     int piece_selected = -1;
     //2 blanc
     //1 noir
-    int who_play = 2;
     int l_buf = 0;//Position à n-1
     int c_buf = 0;//Position à n-1
 
@@ -59,6 +59,13 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
 
     Map noir_blanc;
     Map map_piece;
+    Map map_image_blanc;
+
+    create_map(&map_image_blanc,4);
+    add_to_map(&map_image_blanc,2,"../Img/Tour.bmp");
+    add_to_map(&map_image_blanc,3,"../Img/Cavalier.bmp");
+    add_to_map(&map_image_blanc,4,"../Img/Fou.bmp");
+    add_to_map(&map_image_blanc,5,"../Img/Reine.bmp");
 
     create_map(&noir_blanc,3);
     add_to_map(&noir_blanc,0,"VIDE");
@@ -201,10 +208,8 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
     int *p;
     while (isOpen)//Cette boucle vas maintenir le programme en "vie".
     {
-
         while (SDL_PollEvent(&sEvents))
         { 
-            printf("%d\n",check_white_pions());
              switch (sEvents.type)
             {
                  case SDL_QUIT://Event lorsque l'on clique pour fermer le programme.
@@ -213,14 +218,15 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     break;
                  case SDL_MOUSEBUTTONDOWN: // Click de souris (Gestionnaire souris)
                    
+                is_king_echec(plateau,plateau_blc_and_wht);
 
                    
-                   /*
-                        Test changment de piece (promotion)
-                    pions_blanc[2].surface_piece = SDL_LoadBMP("../Img/Tour.bmp");
-                    pions_blanc[2].texture_piece = SDL_CreateTextureFromSurface(pRenderer,pions_blanc[2].surface_piece);
-                    SDL_FreeSurface(pions_blanc[2].surface_piece);
-                    */
+                   
+                    //    Test changment de piece (promotion)
+                    //pions_blanc[2].surface_piece = SDL_LoadBMP("../Img/Tour.bmp");
+                    //pions_blanc[2].texture_piece = SDL_CreateTextureFromSurface(pRenderer,pions_blanc[2].surface_piece);
+                    //SDL_FreeSurface(pions_blanc[2].surface_piece);
+                    
 
                     //*p = get_king_position(plateau,plateau_blc_and_wht,2);
                     //printf("ligne : %d\ncolonne : %d\n",*(p+0),*(p+1));
@@ -235,13 +241,13 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     {
                         for (int i_p = 0; i_p < 8; i_p++)
                         {
-                            printf("%d\nXCORD : %d\nYCORD : %d\n---------------\n",i_p,pions_noir[i_p].rect.x,pions_noir[i_p].rect.y);
+                            //printf("%d\nXCORD : %d\nYCORD : %d\n---------------\n",i_p,pions_noir[i_p].rect.x,pions_noir[i_p].rect.y);
                         }
                         
                         
                         //printf("Indice de piece : %d\n",get_piece_indice(read_plateau(ligne,colonne,plateau),colonne,ligne));
-                        printf("Clique sur X : %d Y: %d\n",(colonne*100)+10,(ligne*100)+10);
-                        printf("INDICE DE LA PIECE : %d\n",get_indice_pion((colonne*100)+10,(ligne*100)+10));
+                       // printf("Clique sur X : %d Y: %d\n",(colonne*100)+10,(ligne*100)+10);
+                        //printf("INDICE DE LA PIECE : %d\n",get_indice_pion((colonne*100)+10,(ligne*100)+10));
                         indice_piece = read_plateau(ligne,colonne,plateau);
                         l_buf = ligne;
                         c_buf = colonne;
@@ -252,21 +258,26 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     
                     //printf("Case contain a %s",get_from_map(&map_piece,read_plateau(ligne,colonne,plateau)));
                     /*Noir et blanc sont inversé, à fixer si j'ai le temps*/
-                    if (piece_color == 2 && sEvents.button.clicks == 2 && piece_selected != -1 && is_movable(plateau_blc_and_wht,plateau[l_buf][c_buf],plateau[ligne][colonne],plateau_blc_and_wht[l_buf][c_buf],plateau_blc_and_wht[ligne][colonne],l_buf,c_buf,ligne,colonne) != -1)//On bouge les blancs
+                    if (piece_color == 2 && sEvents.button.clicks == 2 && piece_selected != -1 && is_movable(plateau,plateau_blc_and_wht,plateau[l_buf][c_buf],plateau[ligne][colonne],plateau_blc_and_wht[l_buf][c_buf],plateau_blc_and_wht[ligne][colonne],l_buf,c_buf,ligne,colonne) != -1)//On bouge les blancs
                     {
                         //printf("Au tour des blancs \n");           
-                        //printf("Indice piece : %d\n",piece_selected);      
+                        //printf("Indice piece : %d\n",piece_selected);    
+                        //_roque(plateau,plateau_blc_and_wht);  
                         move_piece(indice_piece,colonne,ligne,piece_selected,piece_color,l_buf,c_buf,plateau_blc_and_wht,plateau); 
                         piece_color = 1;
                         piece_selected = -1;
                         indice_piece = 0;
+                        promotion(pRenderer,&map_image_blanc,plateau);
+
                     }
-                    else if(piece_color == 1 && sEvents.button.clicks == 2 && piece_selected != -1 && is_movable(plateau_blc_and_wht,plateau[l_buf][c_buf],plateau[ligne][colonne],plateau_blc_and_wht[l_buf][c_buf],plateau_blc_and_wht[ligne][colonne],l_buf,c_buf,ligne,colonne) != -1){//On bouge les noirs
+                    else if(piece_color == 1 && sEvents.button.clicks == 2 && piece_selected != -1 && is_movable(plateau,plateau_blc_and_wht,plateau[l_buf][c_buf],plateau[ligne][colonne],plateau_blc_and_wht[l_buf][c_buf],plateau_blc_and_wht[ligne][colonne],l_buf,c_buf,ligne,colonne) != -1){//On bouge les noirs
                         //printf("Au tour des noirs \n");   
+                        //_roque(plateau,plateau_blc_and_wht);  
                         move_piece(indice_piece,colonne,ligne,piece_selected,piece_color,l_buf,c_buf,plateau_blc_and_wht,plateau); 
                         piece_color = 2;
                         indice_piece = 0;
                         piece_selected = -1;
+                        promotion(pRenderer,&map_image_blanc,plateau);
                     }
                     afficher_plateau(plateau);
                     afficher_plateau(plateau_blc_and_wht);
@@ -298,7 +309,7 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     SDL_SetRenderDrawColor(pRenderer, BLANC,BLANC,BLANC, 255);
                 }
                 else{
-                    SDL_SetRenderDrawColor(pRenderer, 255,0,0, 255);
+                    SDL_SetRenderDrawColor(pRenderer, 100,21,0, 255);
                 }
                 SDL_RenderFillRect(pRenderer,&c.cases_de_jeu);
             }
