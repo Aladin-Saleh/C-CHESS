@@ -24,9 +24,11 @@ int main(int argc, char const *argv[])
     int plateau[TAILLE_PLATEAU][TAILLE_PLATEAU];
     int plateau_blc_and_wht[TAILLE_PLATEAU][TAILLE_PLATEAU];
 
+    //Creation des plateaux
     initialisation_plateau(plateau);
     initialisation_plateau_noir_blanc(plateau_blc_and_wht);
 
+    //Creation des pieces
     initialiser_black_and_white_piece(plateau_blc_and_wht);
     initialiser_piece(plateau);
 

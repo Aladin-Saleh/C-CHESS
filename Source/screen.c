@@ -16,11 +16,11 @@
 //$(sdl2-config --cflags --libs)
 struct Cases
 {
-    SDL_Rect cases_de_jeu;
+    SDL_Rect cases_de_jeu;//Case (rendu)
     int ligne;
     int colonne;
-    int x1,x2;
-    int y1,y2;
+    int x1,x2;//Coordonnées x
+    int y1,y2;//Coordonnées y
 };
 
 
@@ -210,6 +210,7 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
     {
         while (SDL_PollEvent(&sEvents))
         { 
+            is_king_echec(plateau,plateau_blc_and_wht,pRenderer);
              switch (sEvents.type)
             {
                  case SDL_QUIT://Event lorsque l'on clique pour fermer le programme.
@@ -218,7 +219,6 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
                     break;
                  case SDL_MOUSEBUTTONDOWN: // Click de souris (Gestionnaire souris)
                    
-                is_king_echec(plateau,plateau_blc_and_wht);
 
                    
                    
