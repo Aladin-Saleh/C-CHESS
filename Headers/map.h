@@ -1,4 +1,3 @@
-
 typedef struct Map Map;
 struct Map
 {
