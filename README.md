@@ -18,6 +18,7 @@ La bibliothèque graphique utilisé est SDL2 (source : https://www.libsdl.org/do
 
 ## Explication du code !
 
+### Plateau de jeu et pieces
 Notre programme fonctionne principalement en utilisant deux matrice (8x8).
 * Une matrice de couleur des pieces.
 * Une matrice de piece avec leurs valeurs.
@@ -57,6 +58,233 @@ On créer d'abord les matrices (les plateaux) en vide.
 Puis on y place les pieces.  
 Voila ce qu'on obtient dans la console :  
 ![image](https://user-images.githubusercontent.com/67257097/145692827-f41d152a-5426-420e-94a1-a7fee1caa2e3.png)
+
+
+### Affichage graphique
+
+L'affichage graphique est gerer via SDL2.
+L'initialisation ce fait grace à ces structures et fonction : 
+[screen.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/screen.c).  
+```C
+    SDL_Window* pWindow = NULL; 
+    SDL_Renderer* pRenderer = NULL; 
+    SDL_Event sEvents;  
+    
+
+    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[debug] %s", SDL_GetError());//Gestionnaire d'erreur SDL
+        exit(-1);
+    }
+    printf("Starting screen...\nVersion : %d.%d.%d\n",nb.major,nb.minor,nb.patch);
+    
+ 
+    
+    //Creation de la fenetre.
+    pWindow = SDL_CreateWindow("Chess", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);       
+    if (pWindow == NULL)//return null en cas d'echec.  
+    {         
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError()); //Gestionnaire d'erreur SDL        
+        SDL_Quit();         
+        exit(EXIT_FAILURE); 
+    }       
+
+    //Creation du rendu de la fenetre.
+    //SDL_Renderer* SDL_CreateRenderer(SDL_Window* window, int index, Uint32 flags)
+    //La fenetre en premier paramètre.
+    //L'index du pilote (-1 permet de laisser SDL choisir le meilleur pilote).
+    //Flags : 
+    //SDL_RENDERER_SOFTWARE : utilise l'accélération logiciel pour faire les calculs de rendu depuis le CPU
+    //SDL_RENDERER_ACCELERATED : utilise l'accélération matériel pour faire les calculs de rendu depuis la GPU
+    //SDL_RENDERER_PRESENTVSYNC : synchronise l'affichage en fonction du taux de rafraîchissement de votre écran
+    //SDL_RENDER_TARGETTEXTURE : autorise-le rendu sur une SDL_Texture (on verra plus en profondeur cette notion dans un chapitre dédié aux textures)
+    pRenderer = SDL_CreateRenderer(pWindow,-1,SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+     if (pRenderer == NULL)//return null en cas d'echec.
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", SDL_GetError()); //Gestionnaire d'erreur SDL        
+            SDL_Quit();         
+            exit(EXIT_FAILURE); 
+        }
+
+```
+
+Pour rester en "vie", le programme utilise une boucle permettant de maintenir le programme en vie.  
+Cela permet aussi au programme de ce mettre à jour et effectuer des actions données toutes le 1 ms.  
+```C
+while (isOpen)//Cette boucle vas maintenir le programme en "vie".
+    {
+        while (SDL_PollEvent(&sEvents))
+        { 
+             switch (sEvents.type)
+            {
+                 case SDL_QUIT://Event lorsque l'on clique pour fermer le programme.
+                    isOpen = 0;
+                    printf("Screen closing ...\n");
+                    break;
+                 case SDL_MOUSEBUTTONDOWN: // Click de souris (Gestionnaire souris)
+                 ......
+             }
+        }
+        
+      }
+```
+
+#### Creation du plateau graphique et initialisation des pieces.
+
+Voici comment le plateau est créer : 
+
+```C
+
+        for (int i = 0; i < 8; i++)
+        {   
+            for (int j = 0; j < 8; j++)
+            {
+                c.cases_de_jeu.h = 100;
+                c.cases_de_jeu.w = 100;
+                c.cases_de_jeu.y = yCoordArray[i][j];//Ce sont des buffers de valeurs
+                c.cases_de_jeu.x = xCoordArray[i][j];
+                c.ligne = i;
+                c.colonne = j;
+                
+                if ((i+j)%2 == 0)
+                {
+                    SDL_SetRenderDrawColor(pRenderer, BLANC,BLANC,BLANC, 255);//Rendu de la couleur
+                }
+                else{
+                    SDL_SetRenderDrawColor(pRenderer, 100,21,0, 255);
+                }
+                SDL_RenderFillRect(pRenderer,&c.cases_de_jeu);//Creation du carré avec le rendu définie juste avant.
+            }
+        
+        }
+```
+La valeur de la somme de i+j vas alterner en 0 et 1.  
+Lorsque la somme vaut 0 on ajoute une case blanches sinon, on y ajoute un case marron.
+Une case est une structure contenant les informations suivantes : 
+```C
+struct Cases
+{
+    SDL_Rect cases_de_jeu;//Case (rendu)
+    int ligne;
+    int colonne;
+    int x1,x2;//Coordonnées x
+    int y1,y2;//Coordonnées y
+};
+
+```
+ #### Les pieces
+
+Les pieces sont des images au format BMP. (Il est possible d'utiliser d'autres formats, mais cela nécessite d'inclure une autre bibliothèque de SDL)
+[Les images](https://github.com/Aladin-Saleh/C-CHESS/tree/main/Img).  
+Une piece est aussi une structure créer tel que : 
+```C
+struct Piece
+{
+    int val_piece;//Valeur de la piece
+    int piece_blanche;
+    SDL_Surface* surface_piece;//La surface de l'image (structure sdl)
+    SDL_Texture* texture_piece;//La texure
+    SDL_Rect rect;//La zone d'affichage
+};
+
+```
+
+On retrouve 32 pieces initialisés via cette structures de la manieres suivantes.
+
+```C
+Piece pions_blanc[8];
+Piece pions_noir[8];
+
+Piece tour_blanc[2];
+Piece tour_noir[2];
+
+Piece cavalier_blanc[2];
+Piece cavalier_noir[2];
+
+Piece fou_blanc[2];
+Piece fou_noir[2];
+
+Piece roi_blanc[1];
+Piece roi_noir[1];
+
+Piece reine_blanc[1];
+Piece reine_noir[1];
+
+```
+
+De plus chaque piece a une valeur constante tel que :  
+```C
+#define PION 1
+#define TOUR 2
+#define CAVALIER 3
+#define FOU 4
+#define ROI 6
+#define REINE 5
+#define NOMBRE_PIECE 6
+```
+
+Chaque piece possède une fonction d'initialisation : 
+```C
+void init_pion(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
+void init_tour(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
+void init_cavalier(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
+void init_fou(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
+void init_roi(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
+void init_reine(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer);
+void initialiser_piece(int plateau[][8]);
+
+```
+
+Exemple avec l'initialisation de la tour : 
+```C
+void init_tour(Piece piece[],int taille_array,int is_piece_blanche,SDL_Renderer* pRenderer){
+
+    int x[2] = {10,710};
+        
+        if (is_piece_blanche)
+        {
+            for (int  i = 0; i < taille_array; i++)
+            {
+                piece[i].surface_piece = SDL_LoadBMP("../Img/Tour.bmp");
+                piece[i].piece_blanche = is_piece_blanche;
+                piece[i].rect.w = 90;
+                piece[i].rect.h = 90;
+                piece[i].rect.y = 710;
+                piece[i].rect.x = x[i];
+                piece[i].texture_piece = SDL_CreateTextureFromSurface(pRenderer,piece[i].surface_piece);
+                SDL_FreeSurface(piece[i].surface_piece);
+
+            }
+        }else
+        {
+            
+            for (int  i = 0; i < taille_array; i++)
+            {
+                piece[i].surface_piece = SDL_LoadBMP("../Img/Tour_noir.bmp");
+                piece[i].piece_blanche = is_piece_blanche;
+                piece[i].rect.w = 90;
+                piece[i].rect.h = 90;
+                piece[i].rect.y = 10;
+                piece[i].rect.x = x[i];
+                piece[i].texture_piece = SDL_CreateTextureFromSurface(pRenderer,piece[i].surface_piece);
+                SDL_FreeSurface(piece[i].surface_piece);
+
+            }
+        }
+        
+        
+
+}
+
+```
+Chaque piece est placée via leur coordonnée x,y et par rapport à leur position dans la matrice (leur indice de matrice)
+Exemple : La tour noir en haut à gauche est en X = 0 Y = 0 et dans la matrice ces indices sont : ```ma_matrice[0][0]```
+
+Une fois l'initialisation du plateau et des pieces faites voici ce que l'on obtient : 
+![image](https://user-images.githubusercontent.com/67257097/145693399-7bf43d32-873f-496d-b87c-f862d959b6ac.png)
+
+
+### Deplacement et coup spéciaux.
 
 
 
