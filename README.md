@@ -4,8 +4,9 @@
 ### Jeux d'échecs réaliser via le langage C et la bibliothèque graphique SDL2
 
 Ce projet est un jeux d'échecs classique.
-Il comprend la totalité des règles à l'exception de l'echec et l'echec et mat.
+Il comprend la totalité des règles à l'exception de l'echec et mat.
 Il comprend : 
+* L'echec (partiellement).
 * Le Roque (petit et grand roque).
 * La prise en passant.
 * La promotion (rencontre quelque bugs).
