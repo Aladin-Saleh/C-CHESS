@@ -463,6 +463,10 @@ int is_movable(int plateau[][8],int plateau_blc_wht[][8],int last_piece_value,in
         {
             return 1;
         }
+        if ((l == nl && c-1 == nc) ||(l == nl && c+1 == nc))
+        {
+            return 1;
+        }
 
         if (_roque_blanc(plateau,plateau_blc_wht) == 1)
         {
