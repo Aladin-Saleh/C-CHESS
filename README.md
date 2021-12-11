@@ -18,6 +18,46 @@ La bibliothèque graphique utilisé est SDL2 (source : https://www.libsdl.org/do
 
 ## Explication du code !
 
+Notre programme fonctionne principalement en utilisant deux matrice (8x8).
+* Une matrice de couleur des pieces.
+* Une matrice de piece avec leurs valeurs.
+
+Dans le code, elles sont initialisé dans le main :
+[main.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/main.c).  
+```C
+int main(int argc, char const *argv[])
+{
+    //Map m_blanc;
+    //Map m_noir;
+
+
+
+    //printf("%s\n",get_from_map(&m_blanc,1));
+    //printf("%s\n",get_from_map(&m_blanc,6));
+
+
+    int plateau[TAILLE_PLATEAU][TAILLE_PLATEAU];
+    int plateau_blc_and_wht[TAILLE_PLATEAU][TAILLE_PLATEAU];
+
+    //Creation des plateaux
+    initialisation_plateau(plateau);
+    initialisation_plateau_noir_blanc(plateau_blc_and_wht);
+
+    //Creation des pieces
+    initialiser_black_and_white_piece(plateau_blc_and_wht);
+    initialiser_piece(plateau);
+
+    initialiser_fenetre(plateau,plateau_blc_and_wht);
+
+    
+    return 0;
+}
+```
+On créer d'abord les matrices (les plateaux) en vide.  
+Puis on y place les pieces.  
+Voila ce qu'on obtient dans la console :  
+![image](https://user-images.githubusercontent.com/67257097/145692827-f41d152a-5426-420e-94a1-a7fee1caa2e3.png)
+
 
 
 
