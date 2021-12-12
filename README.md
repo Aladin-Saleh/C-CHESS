@@ -288,5 +288,83 @@ Une fois l'initialisation du plateau et des pieces faites voici ce que l'on obti
 ### Deplacement et coup spéciaux.
 
 
+### Echec
+Tout le long de la partie, le programme verifie que les rois ne sont pas en echec.  
+Pour cela, le programme verifie d'abord si le roi est entouré par des pieces alliés.
+```C
+    //check roi blanc 2
+    if (plateau_color[xBlanc-1][yBlanc] != 2||
+        plateau_color[xBlanc-1][yBlanc-1] != 2 ||
+        plateau_color[xBlanc-1][yBlanc+1] != 2 ||
+        plateau_color[xBlanc][yBlanc+1] != 2 ||
+        plateau_color[xBlanc][yBlanc-1] != 2 )
+````
+Si c'est le cas, il n'est pas nécessaire de verifier sauf pour le cavalier.  
+Sinon, le programme joue tout les coups possible sur le roi et verifie si ils ne sont pas jouable.  
+Exemple : 
+Verification des diagonale.  
+```C
+for (int i = 1; i < 8-(yBlanc); i++)
+        {
+            //Diagonale droite
+            if (plateau_color[(xBlanc)-i][(yBlanc)+i] == 1 
+            && echec_fou_dd == -1  
+            && (plateau[(xBlanc)-i][(yBlanc)+i] == 4 || plateau[(xBlanc)-i][(yBlanc)+i] == 5 ))
+            {
+                echec_fou_dd = 1;
+            }
+            else if(plateau_color[xBlanc-i][yBlanc+i] == 2 && echec_fou_dd == -1 ){//Si on trouve une piece allié sur le chemin on arrete de verifier
+                echec_fou_dd = 0;
+            }   
+        }
+
+        for (int l = 1; l < yBlanc+1; l++)
+        {
+            //Diagonale gauche
+            if (plateau_color[(xBlanc)-l][(yBlanc)-l] == 1 
+            && echec_fou_dg == -1 
+            && (plateau[(xBlanc)-l][(yBlanc)-l] == 4 || plateau[(xBlanc)-l][(yBlanc)-l] == 5 ) )
+            {
+                echec_fou_dg = 1;
+            }
+            else if(plateau_color[xBlanc-l][yBlanc-l] == 2 && echec_fou_dg == -1 ){
+                echec_fou_dg = 0;
+            } 
+        }
+````
+Lorsque le roi est en echec, la piece devient rouge.  
+Chaque coup possible a une valeur initialisé à -1
+```C
+    int echec_fou_dd = -1;
+    int echec_fou_dg = -1;
+
+    int echec_fou_dd_bas = -1;
+    int echec_fou_dg_bas = -1;
+
+    int horizontal = -1;
+    int vertical = -1;
+````
+Si une de ces valeurs est mise à 1, cela signifie que le roi est en echec.
+```C
+
+        if (echec_fou_dd == 1 || echec_fou_dg == 1 || echec_fou_dg_bas == 1 || echec_fou_dd_bas == 1 || vertical == 1)
+        {
+            roi_noir[0].surface_piece = SDL_LoadBMP("../Img/Roi__echec.bmp");
+            roi_noir[0].texture_piece = SDL_CreateTextureFromSurface(pRenderer,roi_noir[0].surface_piece);
+            SDL_FreeSurface(roi_noir[0].surface_piece);
+            
+            printf("ECHEC\n");
+        }
+        else{
+            roi_noir[0].surface_piece = SDL_LoadBMP("../Img/Roi.bmp");
+            roi_noir[0].texture_piece = SDL_CreateTextureFromSurface(pRenderer,roi_noir[0].surface_piece);
+            SDL_FreeSurface(roi_noir[0].surface_piece);
+
+            printf("PAS ECHEC\n");
+        }
+````
+Le code complet : [mat.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/mat.c).  
+
+![image](https://user-images.githubusercontent.com/67257097/145717195-50e588a2-8005-421a-8b78-42611edf6638.png)
 
 
