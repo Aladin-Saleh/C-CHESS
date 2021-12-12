@@ -29,14 +29,12 @@ Dans le code, elles sont initialisé dans le main :
 ```C
 int main(int argc, char const *argv[])
 {
-    //Map m_blanc;
-    //Map m_noir;
 
 
 
-    //printf("%s\n",get_from_map(&m_blanc,1));
-    //printf("%s\n",get_from_map(&m_blanc,6));
 
+
+     //TAILLE_PLATEAU = 8
 
     int plateau[TAILLE_PLATEAU][TAILLE_PLATEAU];
     int plateau_blc_and_wht[TAILLE_PLATEAU][TAILLE_PLATEAU];
