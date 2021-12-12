@@ -373,12 +373,35 @@ Le code : [roque.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/roq
 Le roque est un déplacement spécial du roi et d'une des tours au jeu d'échecs.  
 Le roque permet, en un seul coup, de mettre le roi à l'abri tout en centralisant une tour, ce qui permet par la même occasion de mobiliser rapidement cette dernière.  
 Il s'agit du seul coup légal permettant de déplacer deux pièces, sans respecter le déplacement classique du roi et de la tour de surcroît.  
+
+Le programme verifie les cotes adjacent du roi pour pouvoir determiner si le roque est jouable.
+Cela comprend le petit et grand roque.
 https://user-images.githubusercontent.com/67257097/145717564-b1923f20-6a91-49a9-b63d-01c7ccb6ff1f.mp4
 
 
 ### Prise en passant
 
+Les regles : https://fr.wikipedia.org/wiki/En_passant_(%C3%A9checs)
+Le code : [manger.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/manger.c).  
 
+Le coup n'est jouable que sur la ligne 3 pour les blancs et ligne 4 pour les noirs (les lignes sont compris de 0 a 7).
+Prise en passant pour les blancs
+```C
+        //diagonale droite en passant
+        if (c+1 == nc && l-1 == nl && plateau_blc_wht[nl][nc] == 0 && plateau_blc_wht[nl+1][nc] == 1 && l == 3)
+        {
+            
+            manger_piece(1,nc,1);//La regle en passant ne s'applique qu'au pion
+            return 1;
+        }
+
+        //diagonale gauche en passant 
+        if (c-1 == nc && l-1 == nl && plateau_blc_wht[nl][nc] == 0 && plateau_blc_wht[nl+1][nc] == 1 && l == 3)
+        {
+            manger_piece(1,nc,1);
+            return 1;
+        }
+```
 
 
 
