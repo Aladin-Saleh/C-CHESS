@@ -379,7 +379,7 @@ https://user-images.githubusercontent.com/67257097/145717564-b1923f20-6a91-49a9-
 
 ### Prise en passant
 
-Les regles : https://fr.wikipedia.org/wiki/En_passant_(%C3%A9checs)
+Les regles : https://fr.wikipedia.org/wiki/En_passant_(%C3%A9checs) .  
 Le code : [manger.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/manger.c).  
 
 Le coup n'est jouable que sur la ligne 3 pour les blancs et ligne 4 pour les noirs (les lignes sont compris de 0 a 7).
@@ -401,6 +401,7 @@ Prise en passant pour les blancs
         }
 ```
 
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/67257097/145723932-94456b39-0e58-4f90-8e1b-c9234a7eef44.gif)
 
 
 
