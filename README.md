@@ -21,7 +21,7 @@ La bibliothèque graphique utilisé est SDL2 (source : https://www.libsdl.org/do
 
 ### Plateau de jeu et pieces
 Notre programme fonctionne principalement en utilisant deux matrice (8x8).
-* Une matrice de couleur des pieces.
+* Une matrice de couleur des pieces.  Les 1 representent les noirs et 2 les blancs.  
 * Une matrice de piece avec leurs valeurs.
 
 Dans le code, elles sont initialisé dans le main :
