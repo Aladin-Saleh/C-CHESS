@@ -364,7 +364,21 @@ Si une de ces valeurs est mise à 1, cela signifie que le roi est en echec.
         }
 ````
 Le code complet : [mat.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/mat.c).  
-
 ![image](https://user-images.githubusercontent.com/67257097/145717195-50e588a2-8005-421a-8b78-42611edf6638.png)
+
+### Roque
+Les regles : https://fr.wikipedia.org/wiki/Roque_(%C3%A9checs) .  
+Le code : [roque.c](https://github.com/Aladin-Saleh/C-CHESS/blob/main/Source/roque.c).  
+
+Le roque est un déplacement spécial du roi et d'une des tours au jeu d'échecs.  
+Le roque permet, en un seul coup, de mettre le roi à l'abri tout en centralisant une tour, ce qui permet par la même occasion de mobiliser rapidement cette dernière.  
+Il s'agit du seul coup légal permettant de déplacer deux pièces, sans respecter le déplacement classique du roi et de la tour de surcroît.  
+https://user-images.githubusercontent.com/67257097/145717564-b1923f20-6a91-49a9-b63d-01c7ccb6ff1f.mp4
+
+
+### Prise en passant
+
+
+
 
 
