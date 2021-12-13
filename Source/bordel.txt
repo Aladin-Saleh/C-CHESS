@@ -1,0 +1,28 @@
+
+        for (int k = 1; k < 8; k++)
+        {
+            if (plateau_color[(xNoir)-k][(yNoir)] == 2 
+            && (plateau[(xNoir)-k][(yNoir)] == 2 || plateau[(xNoir)-k][(yNoir)] == 5 )
+            && vertical == -1)
+            {
+                vertical = 1;
+            }
+            else if(plateau_color[(xNoir)-k][(yNoir)] == 1 && vertical == -1){
+                vertical = 0;
+            }
+            
+        }
+
+        for (int m = 1; m < 8-xNoir; m++)
+        {
+            printf("Vertical :%d\n",plateau_color[xNoir+m][yNoir]);
+            if (plateau_color[(xNoir)+m][(yNoir)] == 2 
+            && (plateau[(xNoir)+m][(yNoir)] == 2 || plateau[(xNoir)+m][(yNoir)] == 5 )
+            && vertical_bas == -1)
+            {
+                vertical_bas = 1;
+            }
+            else if(plateau_color[(xNoir)+m][(yNoir)] == 1 && vertical_bas == -1){
+                vertical_bas = 0;
+            }
+        }

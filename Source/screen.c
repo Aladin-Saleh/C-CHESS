@@ -211,6 +211,7 @@ void initialiser_fenetre(int plateau[][TAILLE_PLATEAU],int plateau_blc_and_wht[]
         while (SDL_PollEvent(&sEvents))
         { 
             is_king_echec(plateau,plateau_blc_and_wht,pRenderer);
+            is_king_echec_noir(plateau,plateau_blc_and_wht,pRenderer);
              switch (sEvents.type)
             {
                  case SDL_QUIT://Event lorsque l'on clique pour fermer le programme.

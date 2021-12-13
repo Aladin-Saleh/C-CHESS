@@ -41,9 +41,9 @@ void promotion(SDL_Renderer *pRenderer,Map *map_image,int plateau[][8]){
         //printf("O_O\n");
         //pions_noir[id].texture_piece = SDL_CreateTextureFromSurface(pRenderer,pions_noir[id].surface_piece);
         //SDL_FreeSurface(pions_noir[1].surface_piece);
-        //pions_noir[id].surface_piece = SDL_LoadBMP("../Img/Tour.bmp");
-        //pions_noir[id].texture_piece = SDL_CreateTextureFromSurface(pRenderer,pions_noir[id].surface_piece);
-        //SDL_FreeSurface(pions_noir[id].surface_piece);
+        pions_noir[id].surface_piece = SDL_LoadBMP("../Img/Tour.bmp");
+        pions_noir[id].texture_piece = SDL_CreateTextureFromSurface(pRenderer,pions_noir[id].surface_piece);
+        SDL_FreeSurface(pions_noir[id].surface_piece);
     }
 }
 
